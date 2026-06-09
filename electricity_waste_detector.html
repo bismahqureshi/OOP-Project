@@ -1,0 +1,272 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --green:#1D9E75;--green-light:#E1F5EE;--green-dark:#085041;
+    --amber:#BA7517;--amber-light:#FAEEDA;
+    --red:#E24B4A;--red-light:#FCEBEB;
+    --gray-bg:#F1EFE8;--gray-mid:#888780;--gray-dark:#2C2C2A;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--color-background-tertiary);color:var(--color-text-primary);padding:0;}
+  
+  .app{max-width:720px;margin:0 auto;padding:1.5rem 1rem 3rem;}
+  
+  .header{text-align:center;margin-bottom:2rem;padding:2rem 1rem;background:var(--color-background-secondary);border-radius:16px;border:0.5px solid var(--color-border-tertiary);}
+  .header h1{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;}
+  .header h1 span{color:var(--green);}
+  .header p{font-size:14px;color:var(--color-text-secondary);}
+  .bolt{font-size:28px;display:block;margin-bottom:8px;}
+
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+  .metric{background:var(--color-background-secondary);border-radius:10px;padding:1rem;border:0.5px solid var(--color-border-tertiary);}
+  .metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px;}
+  .metric-val{font-size:22px;font-weight:600;font-family:'Space Mono',monospace;}
+  .metric-val.green{color:var(--green);}
+  .metric-val.amber{color:var(--amber);}
+  .metric-val.red{color:var(--red);}
+  .metric-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px;}
+
+  .section-title{font-size:13px;font-weight:600;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:1px;margin:1.5rem 0 0.75rem;}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;}
+  .btn:hover{background:var(--color-background-secondary);}
+  .btn.primary{background:var(--green);color:#fff;border-color:var(--green-dark);}
+  .btn.primary:hover{background:var(--green-dark);}
+  .btn.danger{background:var(--red-light);color:var(--red);border-color:#F09595;}
+  .btn.danger:hover{background:#F7C1C1;}
+  .btn.small{padding:4px 10px;font-size:12px;}
+
+  .rooms-grid{display:flex;flex-direction:column;gap:12px;}
+  .room-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;overflow:hidden;}
+  .room-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);}
+  .room-name{font-weight:600;font-size:15px;}
+  .room-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;}
+  .room-status.occupied{background:#E1F5EE;color:#0F6E56;}
+  .room-status.empty{background:#FAEEDA;color:#854F0B;}
+  .room-actions{display:flex;gap:6px;padding:10px 16px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);}
+  .appliances-list{padding:10px 16px;}
+  .appliance-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);}
+  .appliance-item:last-child{border-bottom:none;}
+  .app-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .app-icon.fan{background:#E6F1FB;}
+  .app-icon.light{background:#FAEEDA;}
+  .app-icon.ac{background:#E1F5EE;}
+  .app-info{flex:1;}
+  .app-name{font-size:14px;font-weight:500;}
+  .app-detail{font-size:11px;color:var(--color-text-secondary);}
+  .toggle-btn{width:42px;height:24px;border-radius:12px;border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+  .toggle-btn.on{background:var(--green);}
+  .toggle-btn.off{background:var(--color-border-secondary);}
+  .toggle-btn::after{content:'';position:absolute;width:18px;height:18px;border-radius:9px;background:#fff;top:3px;transition:left 0.2s;}
+  .toggle-btn.on::after{left:21px;}
+  .toggle-btn.off::after{left:3px;}
+  .waste-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:#FCEBEB;color:var(--red);font-weight:600;}
+
+  .add-form{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;padding:1.25rem;margin-top:12px;}
+  .add-form h3{font-size:14px;font-weight:600;margin-bottom:12px;}
+  .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .form-row input,.form-row select{flex:1;min-width:120px;padding:8px 10px;border-radius:8px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--color-text-primary);}
+  .wastage-section{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;padding:1.25rem;margin-top:1.5rem;}
+  .wastage-section h3{font-size:14px;font-weight:600;margin-bottom:10px;}
+  .wastage-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;}
+  .wastage-row:last-child{border-bottom:none;}
+  .wastage-cost{font-family:'Space Mono',monospace;font-size:13px;color:var(--red);font-weight:700;}
+  .no-rooms{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:14px;}
+  .tip{background:#E1F5EE;border:0.5px solid #9FE1CB;border-radius:10px;padding:10px 14px;font-size:13px;color:#085041;margin-top:12px;}
+</style>
+
+<div class="app" id="app">
+  <div class="header">
+    <span class="bolt">⚡</span>
+    <h1>Electricity <span>Waste</span> Detector</h1>
+    <p>Monitor appliances · Detect wastage · Save PKR</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Total Rooms</div>
+      <div class="metric-val green" id="m-rooms">0</div>
+      <div class="metric-sub">registered</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Active Now</div>
+      <div class="metric-val amber" id="m-active">0</div>
+      <div class="metric-sub">appliances ON</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Wastage</div>
+      <div class="metric-val red" id="m-waste">0</div>
+      <div class="metric-sub">items wasted</div>
+    </div>
+  </div>
+
+  <p class="section-title">Rooms</p>
+  <div class="rooms-grid" id="rooms-container">
+    <div class="no-rooms">No rooms yet. Add one below!</div>
+  </div>
+
+  <p class="section-title">Add New Room</p>
+  <div class="add-form">
+    <h3>Room Details</h3>
+    <div class="form-row">
+      <input type="text" id="room-name-input" placeholder="Room name (e.g. Bedroom)" />
+      <button class="btn primary" onclick="addRoom()"><i class="ti ti-plus" aria-hidden="true"></i> Add Room</button>
+    </div>
+  </div>
+
+  <p class="section-title">Add Appliance</p>
+  <div class="add-form">
+    <h3>Appliance Details</h3>
+    <div class="form-row">
+      <select id="app-room-sel"><option value="">Select Room</option></select>
+      <select id="app-type-sel">
+        <option value="fan">Fan</option>
+        <option value="light">Light</option>
+        <option value="ac">AC</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <input type="text" id="app-name-input" placeholder="Appliance name (e.g. Main Fan)" />
+      <input type="number" id="app-param" placeholder="Speed 1-3 / Temp 16-30" min="1" max="30" value="2" />
+      <button class="btn primary" onclick="addAppliance()"><i class="ti ti-plug" aria-hidden="true"></i> Add</button>
+    </div>
+  </div>
+
+  <div class="wastage-section" id="wastage-section" style="display:none;">
+    <h3>⚠️ Wastage Report</h3>
+    <div id="wastage-list"></div>
+  </div>
+</div>
+
+<script>
+let rooms = [];
+let appId = 1;
+
+function getWatts(type, param) {
+  if (type === 'fan') { const s=Math.max(1,Math.min(3,parseInt(param)||2)); return s===1?60:s===2?80:100; }
+  if (type === 'light') { return parseInt(param)===2?100:15; }
+  if (type === 'ac') { const t=Math.max(16,Math.min(30,parseInt(param)||24)); return 1500+Math.max(0,(24-t))*50; }
+  return 60;
+}
+function getIcon(type){ return type==='fan'?'🌀':type==='light'?'💡':'❄️'; }
+function getIconClass(type){ return type; }
+
+function addRoom(){
+  const inp = document.getElementById('room-name-input');
+  const name = inp.value.trim();
+  if(!name){ inp.focus(); return; }
+  rooms.push({id:'R'+(rooms.length+1), name, occupied:false, appliances:[]});
+  inp.value='';
+  render();
+}
+
+function addAppliance(){
+  const roomSel = document.getElementById('app-room-sel');
+  const type = document.getElementById('app-type-sel').value;
+  const name = document.getElementById('app-name-input').value.trim();
+  const param = document.getElementById('app-param').value;
+  const roomIdx = parseInt(roomSel.value);
+  if(isNaN(roomIdx)||!name){ alert('Fill all fields!'); return; }
+  rooms[roomIdx].appliances.push({
+    id:'A'+(appId++), name, type, param, isOn:false,
+    watts: getWatts(type, param),
+    timeOn: null
+  });
+  document.getElementById('app-name-input').value='';
+  render();
+}
+
+function toggleOccupancy(ri){
+  rooms[ri].occupied = !rooms[ri].occupied;
+  if(!rooms[ri].occupied){
+    rooms[ri].appliances.forEach(a=>{ if(a.isOn) a.wasted=true; });
+  }
+  render(); updateWastage();
+}
+
+function toggleAppliance(ri, ai){
+  const a = rooms[ri].appliances[ai];
+  a.isOn = !a.isOn;
+  if(a.isOn){
+    a.timeOn = new Date().toLocaleTimeString();
+    a.wasted = !rooms[ri].occupied;
+  } else {
+    a.wasted = false;
+  }
+  render(); updateWastage();
+}
+
+function updateMetrics(){
+  document.getElementById('m-rooms').textContent = rooms.length;
+  let active=0, waste=0;
+  rooms.forEach(r=>r.appliances.forEach(a=>{
+    if(a.isOn){ active++; if(!r.occupied||a.wasted) waste++; }
+  }));
+  document.getElementById('m-active').textContent = active;
+  document.getElementById('m-waste').textContent = waste;
+}
+
+function updateWastage(){
+  let rows = '';
+  let hasWaste = false;
+  rooms.forEach(r=>{
+    r.appliances.forEach(a=>{
+      if(a.isOn && (!r.occupied || a.wasted)){
+        hasWaste = true;
+        const costPKR = (a.watts/1000)*1*30;
+        rows += `<div class="wastage-row"><span>${a.name} (${r.name})</span><span class="wastage-cost">${costPKR.toFixed(1)} PKR/hr</span></div>`;
+      }
+    });
+  });
+  const ws = document.getElementById('wastage-section');
+  const wl = document.getElementById('wastage-list');
+  if(hasWaste){
+    ws.style.display='block';
+    wl.innerHTML = rows + `<div class="tip">Turn off these appliances in empty rooms to save electricity!</div>`;
+  } else {
+    ws.style.display='none';
+  }
+}
+
+function render(){
+  updateMetrics();
+  const sel = document.getElementById('app-room-sel');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Select Room</option>';
+  rooms.forEach((r,i)=>{ sel.innerHTML+=`<option value="${i}">${r.name}</option>`; });
+  sel.value = prev;
+
+  const container = document.getElementById('rooms-container');
+  if(rooms.length===0){ container.innerHTML='<div class="no-rooms">No rooms yet. Add one below!</div>'; return; }
+
+  container.innerHTML = rooms.map((r,ri)=>`
+    <div class="room-card">
+      <div class="room-header">
+        <div>
+          <div class="room-name">${r.name}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="room-status ${r.occupied?'occupied':'empty'}">${r.occupied?'Occupied':'Empty'}</span>
+          <button class="btn small" onclick="toggleOccupancy(${ri})">${r.occupied?'Mark Empty':'Mark Occupied'}</button>
+        </div>
+      </div>
+      <div class="appliances-list">
+        ${r.appliances.length===0?'<div style="font-size:13px;color:var(--color-text-secondary);padding:6px 0;">No appliances yet.</div>':
+          r.appliances.map((a,ai)=>`
+          <div class="appliance-item">
+            <div class="app-icon ${getIconClass(a.type)}">${getIcon(a.type)}</div>
+            <div class="app-info">
+              <div class="app-name">${a.name} ${a.isOn&&(!r.occupied||a.wasted)?'<span class="waste-badge">WASTAGE</span>':''}</div>
+              <div class="app-detail">${a.watts}W · ${a.type.toUpperCase()}${a.isOn?' · ON since '+a.timeOn:' · OFF'}</div>
+            </div>
+            <button class="toggle-btn ${a.isOn?'on':'off'}" onclick="toggleAppliance(${ri},${ai})" aria-label="Toggle ${a.name}"></button>
+          </div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  updateWastage();
+}
+
+render();
+</script>
